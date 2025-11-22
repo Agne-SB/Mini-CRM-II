@@ -1,0 +1,55 @@
+<div class="card">
+  <div class="card-header">
+    Įmonių sąrašas
+  </div>
+
+  <div class="card-body">
+
+    <div class="alert alert-danger mb-3" *ngIf="isError">
+      {{ errorMessage }}
+    </div>
+
+    <table class="table" *ngIf="!isLoading && !isError">
+      <thead>
+      <tr>
+        <th>Nr.</th>
+        <th>Įmonės pavadinimas</th>
+        <th>Įmonės kodas</th>
+        <th>PVM kodas</th>
+        <th>Adresas</th>
+        <th>El. paštas</th>
+        <th>Telefonas</th>
+        <th>Kontaktai</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let company of companies; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ company.name }}</td>
+        <td>{{ company.companyCode || '-' }}</td>
+        <td>{{ company.vatCode || '-' }}</td>
+        <td>{{ company.address || '-' }}</td>
+        <td>{{ company.email }}</td>
+        <td>{{ company.phone || '-' }}</td>
+        <td>
+          <ng-container *ngIf="company.contacts?.length; else noContacts">
+            <ul class="mb-0 ps-3">
+              <li *ngFor="let c of company.contacts">
+                {{ c.firstName }} {{ c.lastName }}
+                <span *ngIf="c.position"> – {{ c.position }}</span>
+                <span *ngIf="c.phone"> ({{ c.phone }})</span>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #noContacts>-</ng-template>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-info" *ngIf="isLoading">
+      Informacija keliama iš serverio...
+    </div>
+
+  </div>
+</div>

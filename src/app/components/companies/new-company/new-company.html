@@ -1,0 +1,195 @@
+<div class="card">
+  <div class="card-header">
+    Pridėti naują įmonę
+  </div>
+
+  <div class="card-body">
+    <form [formGroup]="newCompanyForm" (ngSubmit)="submitForm()" class="container mt-4">
+      <div class="mb-3">
+        <label class="form-label">Įmonės pavadinimas *</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="name"
+          [class.is-invalid]="newCompanyForm.get('name')?.invalid && newCompanyForm.get('name')?.touched">
+
+        <div class="invalid-feedback" *ngIf="newCompanyForm.get('name')?.errors?.['required']">
+          Laukas privalomas.
+        </div>
+        <div class="invalid-feedback" *ngIf="newCompanyForm.get('name')?.errors?.['minlength']">
+          Pavadinimas turi būti bent 2 simbolių.
+        </div>
+        <div class="invalid-feedback" *ngIf="newCompanyForm.get('name')?.errors?.['maxlength']">
+          Pavadinimas negali būti ilgesnis nei 30 simbolių.
+        </div>
+        <div class="invalid-feedback" *ngIf="newCompanyForm.get('name')?.errors?.['pattern']">
+          Naudokite tik raidines reikšmes.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Įmonės kodas</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="companyCode"
+          [class.is-invalid]="newCompanyForm.get('companyCode')?.invalid && newCompanyForm.get('companyCode')?.touched">
+
+        <div class="invalid-feedback" *ngIf="newCompanyForm.get('companyCode')?.errors?.['pattern']">
+          Įmonės kodas turi būti tik skaičiai.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">PVM registracijos kodas</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="vatCode"
+          [class.is-invalid]="newCompanyForm.get('vatCode')?.invalid && newCompanyForm.get('vatCode')?.touched">
+
+        <div class="invalid-feedback" *ngIf="newCompanyForm.get('vatCode')?.errors?.['pattern']">
+          PVM kodas turi būti skaičiai, arba LT + skaičiai.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Adresas</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="address">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">El. pašto adresas *</label>
+        <input
+          type="email"
+          class="form-control"
+          formControlName="email"
+          [class.is-invalid]="newCompanyForm.get('email')?.invalid && newCompanyForm.get('email')?.touched">
+
+        <div class="invalid-feedback" *ngIf="newCompanyForm.get('email')?.errors?.['required']">
+          El. paštas privalomas.
+        </div>
+        <div class="invalid-feedback" *ngIf="newCompanyForm.get('email')?.errors?.['email']">
+          Įveskite teisingą el. pašto adresą (pvz. agne@pastas.lt).
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Telefonas</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="+3706xxxxxx"
+          formControlName="phone"
+          [class.is-invalid]="newCompanyForm.get('phone')?.invalid && newCompanyForm.get('phone')?.touched">
+
+        <div class="invalid-feedback" *ngIf="newCompanyForm.get('phone')?.errors?.['pattern']">
+          Telefono įvesties formatas +3706xxxxxx, ilgis 10–12 simbolių.
+        </div>
+      </div>
+
+      <hr>
+
+      <h5>Kontaktai</h5>
+
+      <div formArrayName="contacts">
+
+        <div class="card mb-3"
+             *ngFor="let contact of contacts.controls; let i = index"
+             [formGroupName]="i">
+          <div class="card-body">
+
+            <div class="row g-3">
+
+              <div class="col-md-3">
+                <label class="form-label">Vardas *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="firstName"
+                  [class.is-invalid]="contact.get('firstName')?.invalid && contact.get('firstName')?.touched">
+
+                <div class="invalid-feedback" *ngIf="contact.get('firstName')?.errors?.['required']">
+                  Vardas privalomas.
+                </div>
+                <div class="invalid-feedback" *ngIf="contact.get('firstName')?.errors?.['pattern']">
+                  Naudokite tik raidines reikšmes.
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Pavardė *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="lastName"
+                  [class.is-invalid]="contact.get('lastName')?.invalid && contact.get('lastName')?.touched">
+
+                <div class="invalid-feedback" *ngIf="contact.get('lastName')?.errors?.['required']">
+                  Pavardė privaloma.
+                </div>
+                <div class="invalid-feedback" *ngIf="contact.get('lastName')?.errors?.['pattern']">
+                  Naudokite tik raidines reikšmes.
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Pareigos</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="position">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Telefono numeris</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="+3706xxxxxx"
+                  formControlName="contactPhone"
+                  [class.is-invalid]="contact.get('contactPhone')?.invalid && contact.get('contactPhone')?.touched">
+
+                <div class="invalid-feedback" *ngIf="contact.get('contactPhone')?.errors?.['pattern']">
+                  Telefono įvesties formatas +3706xxxxxx, ilgis 10–12 simbolių.
+                </div>
+              </div>
+
+            </div>
+
+            <div class="mt-3 text-end">
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                (click)="removeContact(i)"
+                *ngIf="contacts.length > 1">
+                Pašalinti kontaktą
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-outline-primary mb-3"
+        (click)="addContact()">
+        + Pridėti kontaktą
+      </button>
+
+      <div class="mt-3">
+        <button type="submit" class="btn btn-success">
+          Pridėti įrašą
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
