@@ -9,7 +9,7 @@
       {{ errorMessage }}
     </div>
 
-    <table class="table" *ngIf="!isLoading && !isError">
+    <table class="table" *ngIf="!isLoading && !isError && companies.length > 0">
       <thead>
       <tr>
         <th>Nr.</th>
@@ -19,33 +19,76 @@
         <th>Adresas</th>
         <th>El. paštas</th>
         <th>Telefonas</th>
-        <th>Kontaktai</th>
+        <th>Kontaktų sk.</th>
+        <th>Veiksmai</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let company of companies; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ company.name }}</td>
-        <td>{{ company.companyCode || '-' }}</td>
-        <td>{{ company.vatCode || '-' }}</td>
-        <td>{{ company.address || '-' }}</td>
-        <td>{{ company.email }}</td>
-        <td>{{ company.phone || '-' }}</td>
-        <td>
-          <ng-container *ngIf="company.contacts?.length; else noContacts">
-            <ul class="mb-0 ps-3">
-              <li *ngFor="let c of company.contacts">
-                {{ c.firstName }} {{ c.lastName }}
-                <span *ngIf="c.position"> – {{ c.position }}</span>
-                <span *ngIf="c.phone"> ({{ c.phone }})</span>
-              </li>
-            </ul>
-          </ng-container>
-          <ng-template #noContacts>-</ng-template>
-        </td>
-      </tr>
+      <ng-container *ngFor="let company of companies; let i = index">
+
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ company.name }}</td>
+          <td>{{ company.companyCode || '-' }}</td>
+          <td>{{ company.vatCode || '-' }}</td>
+          <td>{{ company.address || '-' }}</td>
+          <td>{{ company.email }}</td>
+          <td>{{ company.phone || '-' }}</td>
+
+          <td>
+        <span *ngIf="company.contacts?.length; else noContactsCount">
+          {{ company.contacts.length }}
+        </span>
+            <ng-template #noContactsCount>0</ng-template>
+          </td>
+
+          <td class="d-flex gap-2">
+
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary btn-contact-toggle"
+              [disabled]="!company.contacts?.length"
+              (click)="toggleContacts(company.id)"
+            >
+              {{ expandedCompanyId === company.id ? 'Slėpti kontaktus' : 'Peržiūrėti kontaktus' }}
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-danger btn-delete-company"
+              (click)="onDeleteCompany(company)"
+            >
+              Šalinti
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="expandedCompanyId === company.id" class="table-active">
+          <td colspan="9">
+            <ng-container *ngIf="company.contacts?.length; else noContactsExpanded">
+              <strong>Kontaktai:</strong>
+              <ul class="mb-0 mt-2">
+                <li *ngFor="let c of company.contacts">
+                  {{ c.firstName }} {{ c.lastName }}
+                  <span *ngIf="c.position"> – {{ c.position }}</span>
+                  <span *ngIf="c.contactPhone"> ({{ c.contactPhone }})</span>
+                </li>
+              </ul>
+            </ng-container>
+            <ng-template #noContactsExpanded>
+              <em>Įmonė neturi pridėtų kontaktų.</em>
+            </ng-template>
+          </td>
+        </tr>
+
+      </ng-container>
       </tbody>
+
     </table>
+
+    <div class="alert alert-secondary" *ngIf="!isLoading && !isError && companies.length === 0">
+      Įmonių įrašų nėra.
+    </div>
 
     <div class="alert alert-info" *ngIf="isLoading">
       Informacija keliama iš serverio...

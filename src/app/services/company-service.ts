@@ -16,10 +16,14 @@ export class CompanyService {
   constructor(private http: HttpClient) {}
 
   public getCompanies() {
+    console.log('[Service] getCompanies kviečiamas');
+
     return this.http
       .get<{ [key: string]: Company } | null>(this.url + '.json')
       .pipe(
         map((data) => {
+          console.log('[Service] HTTP atsakymas iš Firebase:', data);
+
           const companies: Company[] = [];
 
           if (!data) {
@@ -33,9 +37,11 @@ export class CompanyService {
             }
           }
 
+          console.log('[Service] Suformuotas companies masyvas:', companies);
           return companies;
         }),
         tap((data) => {
+          console.log('[Service] tap – priskiriu this.companies', data);
           this.companies = data;
         })
       );
@@ -44,4 +50,9 @@ export class CompanyService {
   public addCompany(company: Company) {
     return this.http.post(this.url + '.json', company);
   }
+
+  public deleteCompany(id: string) {
+    return this.http.delete(this.url + '/' + id + '.json');
+  }
+
 }
