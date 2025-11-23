@@ -102,7 +102,12 @@ export class NewCompany {
         this.contacts.clear();
         this.contacts.push(this.createContactGroup());
 
-        this.router.navigate(['']);
+        this.successMessage = 'Įmonė sėkmingai išsaugota!';
+
+        setTimeout(() => {
+          this.router.navigate(['']);
+        }, 1500);
+
       },
       error: () => {
         this.isLoading = false;

@@ -4,7 +4,21 @@
   </div>
 
   <div class="card-body">
-    <form [formGroup]="newCompanyForm" (ngSubmit)="submitForm()" class="container mt-4">
+    <div class="card-body">
+
+        <div class="alert alert-info" *ngIf="isLoading">
+          Duomenys įrašomi į serverį...
+        </div>
+
+        <div class="alert alert-danger" *ngIf="isError">
+          {{ errorMessage }}
+        </div>
+
+        <div class="alert alert-success" *ngIf="successMessage">
+          {{ successMessage }}
+        </div>
+
+        <form [formGroup]="newCompanyForm" (ngSubmit)="submitForm()" class="container mt-4">
       <div class="mb-3">
         <label class="form-label">Įmonės pavadinimas *</label>
         <input
